@@ -1,4 +1,4 @@
-og-card-2.jpg              -> 1200x630 link-preview card (name + AURA frames)
+og-card-3.jpg          -> 2400x1260 link-preview card (2x, so LinkedIn/Retina downscaling stays sharp)
 thumbs/aura.jpg        -> poster for static/videos/aura.mp4 (its first frame)
 thumbs/slicedit.jpg    -> poster for static/videos/slicedit.mp4 (its first frame)
 profile.jpg            -> optional portrait; the .avatar block was removed, see git history
