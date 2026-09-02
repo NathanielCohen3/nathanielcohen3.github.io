@@ -528,14 +528,16 @@
       border: 1px solid var(--line);
     }
 
-    .thumb img {
+    .thumb img,
+    .thumb video {
       width: 100%;
       height: 100%;
-      /* paper figures: never crop them */
+      /* figures and clips: never crop them */
       object-fit: contain;
       display: block;
       position: relative;
       z-index: 1;
+      background: #fff;
     }
 
     .thumb .ph {
@@ -941,9 +943,10 @@
 
       <article class="pub" id="pub-aura">
         <div class="thumb">
-          <span class="ph">static/images/thumbs/aura.jpg</span>
-          <img src="static/images/thumbs/aura.jpg" alt="AURA teaser figure" loading="lazy"
-            onerror="this.remove()">
+          <span class="ph">static/videos/aura.mp4</span>
+          <!-- Looping clip; the still figure is the poster, so it also covers the no-video case. -->
+          <video src="static/videos/aura.mp4" poster="static/images/thumbs/aura.jpg" muted loop playsinline
+            autoplay preload="none" aria-label="AURA: a talking head generated from audio"></video>
         </div>
         <div>
           <h3>AURA: AUdio-dRiven streaming Avatar</h3>
@@ -999,9 +1002,9 @@
 
       <article class="pub" id="pub-slicedit">
         <div class="thumb">
-          <span class="ph">static/images/thumbs/slicedit.jpg</span>
-          <img src="static/images/thumbs/slicedit.jpg"
-            alt="Slicedit: a cat in the grass edited into a cheetah" loading="lazy" onerror="this.remove()">
+          <span class="ph">static/videos/slicedit.mp4</span>
+          <video src="static/videos/slicedit.mp4" poster="static/images/thumbs/slicedit.jpg" muted loop playsinline
+            autoplay preload="none" aria-label="Slicedit: a cat in the grass edited into a cheetah"></video>
         </div>
         <div>
           <h3>Slicedit: Zero-Shot Video Editing With Text-to-Image Diffusion Models Using Spatio-Temporal Slices</h3>
@@ -1104,6 +1107,28 @@
       }
       onScroll();
       window.addEventListener('scroll', onScroll, { passive: true });
+    })();
+
+    /* ---------- thumbnail clips: only play when visible, and never
+                    when the visitor asked for reduced motion ---------- */
+    (function () {
+      var vids = Array.prototype.slice.call(document.querySelectorAll('.thumb video'));
+      if (!vids.length) return;
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        vids.forEach(function (v) { v.removeAttribute('autoplay'); v.pause(); });
+        return;
+      }
+      if (!('IntersectionObserver' in window)) return;
+
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          var v = e.target;
+          if (e.isIntersecting) { v.play().catch(function () { }); }
+          else { v.pause(); }
+        });
+      }, { rootMargin: '150px' });
+      vids.forEach(function (v) { io.observe(v); });
     })();
 
     /* ---------- news: show more / show less ---------- */
