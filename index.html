@@ -1,1 +1,1165 @@
-# Main page
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nathaniel Cohen</title>
+  <meta name="description"
+    content="Nathaniel Cohen, PhD researcher at Kyutai and Sorbonne Université (ISIR), Paris. Generative video models: diffusion distillation, streaming and causal generation, audio-driven avatars.">
+  <meta name="author" content="Nathaniel Cohen">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- Link previews (LinkedIn / Slack / X). og:image must be an absolute URL. -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Nathaniel Cohen">
+  <meta property="og:description"
+    content="PhD researcher at Kyutai and Sorbonne Université (ISIR), Paris. Generative video models.">
+  <meta property="og:url" content="https://nathanielcohen3.github.io/">
+  <meta property="og:image" content="https://nathanielcohen3.github.io/static/images/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.92em' font-size='88' font-family='Georgia,serif'>N</text></svg>">
+
+  <!-- Webfonts: the only external resource on this page. If it fails to load,
+       the system font stacks below take over and the page still looks fine. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
+  <style>
+    /* ============ tokens ============ */
+    :root {
+      --bg: #fdfcfa;
+      --bg-soft: #f5f3ef;
+      --card: #ffffff;
+      --fg: #17171a;
+      --fg-soft: #55555e;
+      --fg-faint: #8b8b95;
+      --line: #e6e3dd;
+      --line-soft: #efece6;
+      --accent: #2f4bd8;
+      --accent-fg: #2f4bd8;
+      --accent-soft: #eef1fe;
+      --glow-a: rgba(47, 75, 216, .10);
+      --glow-b: rgba(216, 122, 47, .09);
+      --shadow: 0 1px 2px rgba(20, 20, 30, .04), 0 8px 24px -12px rgba(20, 20, 30, .10);
+      --shadow-lift: 0 1px 2px rgba(20, 20, 30, .05), 0 18px 40px -18px rgba(20, 20, 30, .18);
+      --wrap: 820px;
+      --serif: "Newsreader", "Iowan Old Style", Palatino, Georgia, serif;
+      --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #101013;
+      --bg-soft: #16161a;
+      --card: #17171b;
+      --fg: #f0efec;
+      --fg-soft: #a9a9b3;
+      --fg-faint: #7c7c86;
+      --line: #26262c;
+      --line-soft: #202026;
+      --accent: #96b0ff;
+      --accent-fg: #a8bcff;
+      --accent-soft: #1a2038;
+      --glow-a: rgba(90, 120, 255, .14);
+      --glow-b: rgba(255, 150, 80, .07);
+      --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px -12px rgba(0, 0, 0, .5);
+      --shadow-lift: 0 1px 2px rgba(0, 0, 0, .35), 0 18px 40px -18px rgba(0, 0, 0, .7);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      html {
+        scroll-behavior: smooth;
+      }
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--sans);
+      font-size: 16.5px;
+      line-height: 1.68;
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+
+    /* soft light behind the header, fades out on scroll */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: 620px;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(720px 380px at 12% -8%, var(--glow-a), transparent 70%),
+        radial-gradient(620px 340px at 88% -14%, var(--glow-b), transparent 72%);
+    }
+
+    a {
+      color: var(--accent-fg);
+      text-decoration: none;
+      text-underline-offset: 2px;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .wrap {
+      max-width: var(--wrap);
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* ============ nav ============ */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+      backdrop-filter: saturate(180%) blur(14px);
+      -webkit-backdrop-filter: saturate(180%) blur(14px);
+      border-bottom: 1px solid transparent;
+      transition: border-color .25s;
+    }
+
+    nav.scrolled {
+      border-bottom-color: var(--line);
+    }
+
+    nav .wrap {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      height: 58px;
+    }
+
+    .brand {
+      font-family: var(--serif);
+      font-size: 1.08rem;
+      font-weight: 500;
+      color: var(--fg);
+      white-space: nowrap;
+      margin-right: auto;
+    }
+
+    .brand:hover {
+      text-decoration: none;
+      color: var(--accent-fg);
+    }
+
+    nav ul {
+      display: flex;
+      gap: .35rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      font-size: .9rem;
+    }
+
+    nav ul a {
+      display: block;
+      padding: .25rem .6rem;
+      border-radius: 999px;
+      color: var(--fg-soft);
+      transition: color .18s, background .18s;
+    }
+
+    nav ul a:hover {
+      color: var(--fg);
+      background: var(--bg-soft);
+      text-decoration: none;
+    }
+
+    nav ul a[aria-current="true"] {
+      color: var(--accent-fg);
+      background: var(--accent-soft);
+    }
+
+    .themebtn {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex: 0 0 32px;
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--fg-soft);
+      cursor: pointer;
+      transition: color .18s, border-color .18s;
+    }
+
+    .themebtn:hover {
+      color: var(--accent-fg);
+      border-color: var(--accent);
+    }
+
+    .themebtn svg {
+      width: 15px;
+      height: 15px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.7;
+      stroke-linecap: round;
+    }
+
+    :root[data-theme="dark"] .themebtn .i-sun,
+    :root:not([data-theme="dark"]) .themebtn .i-moon {
+      display: none;
+    }
+
+    /* ============ shared section chrome ============ */
+    section {
+      padding: 3.6rem 0;
+      scroll-margin-top: 58px;
+    }
+
+    section+section {
+      border-top: 1px solid var(--line-soft);
+    }
+
+    h2 {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 1.72rem;
+      letter-spacing: -.005em;
+      margin: 0 0 1.6rem;
+    }
+
+    p {
+      margin: 0 0 1.05rem;
+    }
+
+    /* ============ header ============ */
+    header {
+      padding: 4.4rem 0 3.4rem;
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: clamp(2.4rem, 7vw, 3.3rem);
+      line-height: 1.06;
+      letter-spacing: -.02em;
+      margin: 0 0 .7rem;
+    }
+
+    .role {
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      font-style: italic;
+      color: var(--fg-soft);
+      margin: 0 0 .25rem;
+    }
+
+    .affil {
+      font-size: .95rem;
+      color: var(--fg-soft);
+      margin: 0 0 1.3rem;
+    }
+
+    .blurb {
+      max-width: 60ch;
+      font-size: 1.02rem;
+      color: var(--fg-soft);
+      margin: 0 0 1.6rem;
+    }
+
+    .blurb strong {
+      color: var(--fg);
+      font-weight: 500;
+    }
+
+    /* ============ social pills ============ */
+    .social {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+
+    .social a {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      padding: .4rem .85rem;
+      font-size: .87rem;
+      font-weight: 500;
+      color: var(--fg-soft);
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      transition: color .18s, border-color .18s, transform .18s, box-shadow .18s;
+    }
+
+    .social a:hover {
+      color: var(--accent-fg);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-lift);
+      text-decoration: none;
+    }
+
+    .social svg {
+      width: 15px;
+      height: 15px;
+      fill: currentColor;
+    }
+
+    /* ============ about ============ */
+    .lead {
+      font-size: 1.05rem;
+    }
+
+    .facts {
+      list-style: none;
+      margin: 2rem 0 0;
+      padding: 0;
+      display: grid;
+      gap: 1.1rem;
+      font-size: .95rem;
+    }
+
+    .facts li {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 1.2rem;
+      align-items: start;
+    }
+
+    .facts .k {
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+      color: var(--fg-faint);
+      padding-top: .34rem;
+    }
+
+    .facts .v {
+      color: var(--fg-soft);
+    }
+
+    .facts .v b {
+      color: var(--fg);
+      font-weight: 500;
+    }
+
+    .facts .v span.sub {
+      color: var(--fg-faint);
+    }
+
+    .facts .v .row {
+      display: block;
+    }
+
+    .facts .v .row+.row {
+      margin-top: .5rem;
+    }
+
+    .facts .mail {
+      color: var(--fg);
+      font-family: var(--mono);
+      font-size: .88em;
+      background: var(--bg-soft);
+      border: 1px solid var(--line-soft);
+      border-radius: 6px;
+      padding: .05rem .4rem;
+      white-space: nowrap;
+    }
+
+    .tags {
+      margin: 2.1rem 0 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+    }
+
+    .tags li {
+      font-size: .82rem;
+      color: var(--fg-soft);
+      background: var(--bg-soft);
+      border: 1px solid var(--line-soft);
+      border-radius: 999px;
+      padding: .22rem .7rem;
+    }
+
+    /* ============ news ============ */
+    .news {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .news li {
+      position: relative;
+      display: grid;
+      grid-template-columns: 104px 1fr;
+      gap: 1.3rem;
+      padding: .7rem 0 .7rem 0;
+      font-size: .96rem;
+      color: var(--fg-soft);
+    }
+
+    .news li::before {
+      content: "";
+      position: absolute;
+      left: 92px;
+      top: 1.28rem;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--line);
+    }
+
+    .news li:first-child::before {
+      background: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .news li+li {
+      border-top: 1px dashed var(--line-soft);
+    }
+
+    .news time {
+      color: var(--fg-faint);
+      font-variant-numeric: tabular-nums;
+      font-size: .86rem;
+      letter-spacing: .01em;
+      padding-top: .16rem;
+      white-space: nowrap;
+    }
+
+    .news b {
+      color: var(--fg);
+      font-weight: 600;
+    }
+
+    .news li[hidden] {
+      display: none;
+    }
+
+    .morebtn {
+      margin-top: 1.3rem;
+      font: inherit;
+      font-size: .88rem;
+      font-weight: 500;
+      color: var(--fg-soft);
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: .34rem .95rem;
+      cursor: pointer;
+      transition: color .18s, border-color .18s;
+    }
+
+    .morebtn:hover {
+      color: var(--accent-fg);
+      border-color: var(--accent);
+    }
+
+    /* ============ publications ============ */
+    .year {
+      display: flex;
+      align-items: center;
+      gap: .9rem;
+      font-family: var(--serif);
+      font-size: 1rem;
+      color: var(--fg-faint);
+      letter-spacing: .06em;
+      margin: 2.4rem 0 1rem;
+    }
+
+    .year::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--line-soft);
+    }
+
+    .year:first-of-type {
+      margin-top: 0;
+    }
+
+    .pub {
+      display: grid;
+      grid-template-columns: 208px 1fr;
+      gap: 1.5rem;
+      padding: 1.35rem;
+      margin: 0 -1.35rem;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      transition: background .2s, border-color .2s, box-shadow .2s;
+    }
+
+    .pub:hover {
+      background: var(--card);
+      border-color: var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .thumb {
+      position: relative;
+      aspect-ratio: 16/9;
+      border-radius: 9px;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      /* paper figures: never crop them */
+      object-fit: contain;
+      display: block;
+      position: relative;
+      z-index: 1;
+    }
+
+    .thumb .ph {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: .7rem;
+      color: #9a9aa4;
+      padding: .5rem;
+      line-height: 1.4;
+    }
+
+    .pub h3 {
+      font-family: var(--serif);
+      font-size: 1.18rem;
+      font-weight: 500;
+      line-height: 1.32;
+      letter-spacing: -.005em;
+      margin: -.3rem 0 .45rem;
+    }
+
+    .authors {
+      font-size: .91rem;
+      color: var(--fg-soft);
+      margin: 0 0 .5rem;
+    }
+
+    .authors b {
+      color: var(--fg);
+      font-weight: 600;
+    }
+
+    .authors a {
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-color: var(--line);
+      text-decoration-thickness: 1px;
+    }
+
+    .authors a:hover {
+      color: var(--accent-fg);
+      text-decoration-color: currentColor;
+    }
+
+    .authors .eq {
+      color: var(--fg-faint);
+      font-size: .84rem;
+    }
+
+    .venue {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .5rem;
+      font-size: .89rem;
+      color: var(--fg-soft);
+      margin: 0 0 .85rem;
+    }
+
+    .badge {
+      font-size: .76rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      color: var(--accent-fg);
+      background: var(--accent-soft);
+      border-radius: 999px;
+      padding: .16rem .6rem;
+      white-space: nowrap;
+    }
+
+    .plinks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      align-items: center;
+    }
+
+    .plinks a,
+    .plinks button {
+      font: inherit;
+      font-size: .84rem;
+      font-weight: 500;
+      color: var(--fg-soft);
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: .22rem .75rem;
+      cursor: pointer;
+      transition: color .18s, border-color .18s, background .18s;
+    }
+
+    .plinks a:hover,
+    .plinks button:hover {
+      color: var(--accent-fg);
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      text-decoration: none;
+    }
+
+    .plinks button[aria-expanded="true"] {
+      color: var(--accent-fg);
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .plinks .soon {
+      font-size: .84rem;
+      font-weight: 500;
+      color: var(--fg-faint);
+      border: 1px dashed var(--line);
+      border-radius: 999px;
+      padding: .22rem .75rem;
+      cursor: default;
+    }
+
+    .panel {
+      margin-top: .95rem;
+      font-size: .91rem;
+      color: var(--fg-soft);
+    }
+
+    .panel[hidden] {
+      display: none;
+    }
+
+    .panel > p {
+      margin: 0;
+      text-align: justify;
+      hyphens: auto;
+      border-left: 2px solid var(--accent-soft);
+      padding-left: 1rem;
+    }
+
+    .bibbox {
+      position: relative;
+    }
+
+    pre {
+      margin: 0;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: .78rem;
+      line-height: 1.6;
+      color: var(--fg-soft);
+      background: var(--bg-soft);
+      border: 1px solid var(--line-soft);
+      border-radius: 9px;
+      padding: .85rem 1rem;
+    }
+
+    .copybtn {
+      position: absolute;
+      top: .5rem;
+      right: .5rem;
+      font: inherit;
+      font-size: .74rem;
+      color: var(--fg-soft);
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: .12rem .5rem;
+      cursor: pointer;
+    }
+
+    .copybtn:hover {
+      color: var(--accent-fg);
+      border-color: var(--accent);
+    }
+
+    /* ============ footer ============ */
+    footer {
+      border-top: 1px solid var(--line-soft);
+      padding: 2.2rem 0 3rem;
+      color: var(--fg-faint);
+      font-size: .84rem;
+    }
+
+    footer p {
+      margin: 0;
+    }
+
+    /* ============ responsive ============ */
+    @media (max-width: 680px) {
+      body {
+        font-size: 16px;
+      }
+
+      nav ul {
+        font-size: .86rem;
+      }
+
+      nav ul a {
+        padding: .25rem .45rem;
+      }
+
+      header {
+        padding: 3rem 0 2.6rem;
+      }
+
+      section {
+        padding: 2.8rem 0;
+      }
+
+      .pub {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 1rem;
+        margin: 0 -1rem;
+      }
+
+      .thumb {
+        max-width: 380px;
+      }
+
+      .facts li,
+      .news li {
+        grid-template-columns: 1fr;
+        gap: .15rem;
+      }
+
+      .news li::before {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============ NAV ============ -->
+  <nav id="nav">
+    <div class="wrap">
+      <a class="brand" href="#top">Nathaniel Cohen</a>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="#publications">Publications</a></li>
+      </ul>
+      <button class="themebtn" id="themebtn" type="button" title="Toggle dark mode" aria-label="Toggle dark mode">
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.2" />
+          <path d="M12 2.4v2.2M12 19.4v2.2M2.4 12h2.2M19.4 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6" />
+        </svg>
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1Z" />
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ============ HEADER ============ -->
+  <header id="top">
+    <div class="wrap">
+      <h1>Nathaniel Cohen</h1>
+      <p class="role">PhD researcher in generative video models</p>
+      <p class="affil"><a href="https://kyutai.org">Kyutai</a> &amp; Sorbonne Université (ISIR) &middot; Paris,
+        France</p>
+      <p class="blurb">I work on <strong>generative models for video</strong>: diffusion-based methods,
+        spatio-temporal representations, and the training and inference efficiency that makes them fast enough to run
+        in real time.</p>
+
+      <div class="social">
+        <!-- No public mailto on purpose (spam). Reachable via LinkedIn. -->
+        <a href="https://scholar.google.com/citations?user=jUbD3kIAAAAJ&hl=en" title="Google Scholar">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2 1 9l4 2.6V17l7 5 7-5v-5.4L23 9 12 2Zm0 12.6L6.6 11 12 7.4 17.4 11 12 14.6Z" />
+          </svg>Google Scholar</a>
+
+        <a href="https://www.linkedin.com/in/nathaniel-cohen-6032b7235/" title="LinkedIn">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05a3.75 3.75 0 0 1 3.37-1.85c3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.55V9h3.57v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z" />
+          </svg>LinkedIn</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ ABOUT ============ -->
+  <section id="about">
+    <div class="wrap">
+      <h2>About</h2>
+
+      <p class="lead">I am a PhD researcher at <a href="https://kyutai.org">Kyutai</a>, an open-science AI lab in
+        Paris, and at Sorbonne Université (ISIR). I work on generative models for video, with a focus on
+        diffusion-based methods and spatio-temporal representations. My goal is to make such models controllable,
+        scalable and computationally efficient, with particular attention to training efficiency and fast
+        inference.</p>
+
+      <p>Most recently that has meant turning strong but slow bidirectional video diffusion models into
+        <strong>causal, few-step, streaming</strong> generators, using audio-driven talking-head generation as a
+        testbed, the setting where latency is not a detail but the whole point (<a href="#pub-aura">AURA</a>, BMVC
+        2026). Before the PhD, I worked at the Technion on zero-shot video editing with image diffusion priors
+        (<a href="#pub-slicedit">Slicedit</a>, ICML 2024).</p>
+
+      <ul class="facts">
+        <li>
+          <span class="k">Now</span>
+          <span class="v"><b>PhD researcher</b> at <a href="https://kyutai.org">Kyutai</a> &amp; Sorbonne Université
+            (ISIR), Paris<br><span class="sub">PhD since January 2026 · at Kyutai since March 2025</span></span>
+        </li>
+        <li>
+          <span class="k">Before</span>
+          <span class="v">
+            <span class="row"><b>AI research scientist intern</b>, Kyutai <span class="sub">· March–December
+                2025</span></span>
+            <span class="row"><b>Research intern</b>, Philips R&amp;D <span class="sub">· 2024 · deep learning for
+                fluoroscopy: point tracking in X-ray video</span></span>
+            <span class="row"><b>Visiting researcher, then research associate</b>, Technion <span class="sub">·
+                2023–2024 · Faculty of Electrical and Computer Engineering: diffusion models for video
+                editing</span></span>
+          </span>
+        </li>
+        <li>
+          <span class="k">Education</span>
+          <span class="v">
+            <span class="row"><b>MSc MVA</b> (Mathematics, Vision, Learning), ENS Paris-Saclay <span class="sub">·
+                2023–2024</span></span>
+            <span class="row"><b>Diplôme d'ingénieur</b>, Mines Paris - PSL <span class="sub">· 2021–2024</span></span>
+            <span class="row"><b>BSc Mathematics</b>, Université Paris-Dauphine <span class="sub">·
+                2018–2021</span></span>
+          </span>
+        </li>
+        <li>
+          <span class="k">Contact</span>
+          <span class="v">Best reached via <a href="https://www.linkedin.com/in/nathaniel-cohen-6032b7235/">LinkedIn</a>,
+            or by email at <span class="mail">nathaniel dot cohen at kyutai dot org</span>
+            <!-- spelled out on purpose: no mailto, no plain address for spam crawlers --></span>
+        </li>
+      </ul>
+
+      <ul class="tags">
+        <li>Generative video models</li>
+        <li>Diffusion distillation</li>
+        <li>Streaming / causal generation</li>
+        <li>Audio-driven avatars</li>
+        <li>Efficient inference</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ NEWS ============ -->
+  <section id="news">
+    <div class="wrap">
+      <h2>News</h2>
+
+      <!-- Newest first. Entries after the 4th are collapsed behind "Show more". -->
+      <ul class="news" id="newslist">
+        <li>
+          <time datetime="2026-09-08">Sep 2026</time>
+          <span><b>AURA</b> is presented at two ECCV 2026 workshops in Malmö: a poster at
+            <a href="https://gen4avc.github.io/eccv2026/">Gen4AVC</a> (Sep 8) and an oral + poster at
+            <a href="https://eccv.ecva.net/virtual/2026/workshop/3092">AVGenL</a> (Sep 9).</span>
+        </li>
+        <li>
+          <time datetime="2026-08">Aug 2026</time>
+          <span><b>AURA</b> is accepted at <b>BMVC 2026</b>.
+            <a href="https://nathanielcohen3.github.io/aura_website/">Project page</a></span>
+        </li>
+        <li>
+          <time datetime="2026-01">Jan 2026</time>
+          <span>Started my PhD on generative video models at <a href="https://kyutai.org">Kyutai</a>, with Sorbonne
+            Université (ISIR).</span>
+        </li>
+        <li>
+          <time datetime="2025-03">Mar 2025</time>
+          <span>Joined <a href="https://kyutai.org">Kyutai</a> as an AI research scientist.</span>
+        </li>
+        <li>
+          <time datetime="2024-09">Sep 2024</time>
+          <span>Graduated from Mines Paris - PSL and from the MVA master's programme (ENS Paris-Saclay).</span>
+        </li>
+        <li>
+          <time datetime="2024-05">May 2024</time>
+          <span><b>Slicedit</b> is accepted at <b>ICML 2024</b>.
+            <a href="https://arxiv.org/abs/2405.12211">arXiv</a></span>
+        </li>
+        <li>
+          <time datetime="2024-04">Apr 2024</time>
+          <span>Started a research internship at <b>Philips</b> R&amp;D on point tracking in fluoroscopy (X-ray)
+            video.</span>
+        </li>
+        <li>
+          <time datetime="2023-03">Mar 2023</time>
+          <span>Joined the <b>Technion</b> (Faculty of Electrical and Computer Engineering) as a visiting student
+            researcher, working on diffusion models for video editing.</span>
+        </li>
+      </ul>
+
+      <button class="morebtn" id="morebtn" aria-expanded="false">Show more</button>
+    </div>
+  </section>
+
+  <!-- ============ PUBLICATIONS ============ -->
+  <section id="publications">
+    <div class="wrap">
+      <h2>Publications</h2>
+
+      <!-- ---------- 2026 ---------- -->
+      <p class="year">2026</p>
+
+      <article class="pub" id="pub-aura">
+        <div class="thumb">
+          <span class="ph">static/images/thumbs/aura.jpg</span>
+          <img src="static/images/thumbs/aura.jpg" alt="AURA teaser figure" loading="lazy"
+            onerror="this.remove()">
+        </div>
+        <div>
+          <h3>AURA: AUdio-dRiven streaming Avatar</h3>
+          <p class="authors"><b>Nathaniel Cohen</b>, <a href="https://nicolas-dufour.github.io/">Nicolas Dufour</a>,
+            <a href="https://ameroyer.github.io">Amélie Royer</a>, <a
+              href="https://sites.google.com/site/alasdairnewson/home">Alasdair Newson</a>, <a
+              href="https://ptrckprz.github.io/">Patrick Pérez</a></p>
+          <p class="venue"><span class="badge">BMVC 2026</span>
+            <span>Also at the ECCV 2026 workshops <a href="https://gen4avc.github.io/eccv2026/">Gen4AVC</a> (poster)
+              and <a href="https://eccv.ecva.net/virtual/2026/workshop/3092">AVGenL</a> (oral + poster)</span>
+          </p>
+
+          <div class="plinks">
+            <a href="https://nathanielcohen3.github.io/aura_website/">Website</a>
+            <a href="https://nathanielcohen3.github.io/aura_website/static/paper/AURA_bmvc.pdf">Paper</a>
+            <span class="soon" title="Release planned before BMVC 2026">arXiv soon</span>
+            <span class="soon" title="Release planned before BMVC 2026">Code soon</span>
+            <button type="button" data-toggle="abs-aura" aria-expanded="false">Abstract</button>
+            <button type="button" data-toggle="bib-aura" aria-expanded="false">BibTeX</button>
+          </div>
+
+          <div class="panel" id="abs-aura" hidden>
+            <p>Current audio-driven video diffusion models can synthesize realistic talking-head videos but generally
+              require dozens of diffusion denoising steps over multi-second video chunks, making them unsuitable for
+              streaming applications such as voice assistants and virtual avatars, where low latency and online causal
+              generation are required properties. AURA generates high-resolution video chunk-by-chunk at 9.7 fps with a
+              rolling KV cache, requiring only the audio of the current chunk rather than the multi-second audio
+              look-ahead buffered by bidirectional models, making it well-suited to interactive avatar applications.
+              Our two-stage distillation pipeline first aligns the causal student with the teacher, by training it to
+              match the teacher's trajectories with fewer diffusion steps and a chunk-wise causal attention mask, then
+              applies Distribution Matching Distillation (DMD) with backward simulation to close the remaining quality
+              gap. On standard talking-head benchmarks, AURA matches the teacher's quality while running 17× faster,
+              achieving 720p avatar streaming on a single GPU. To support reproducibility and further research, we
+              release our model's weights along with a dataset of 30K synthetic videos and their precomputed teacher
+              trajectories.</p>
+          </div>
+
+          <div class="panel bibbox" id="bib-aura" hidden>
+            <button class="copybtn" type="button" data-copy="bibtext-aura">Copy</button>
+            <pre id="bibtext-aura">@inproceedings{cohen2026aura,
+  title     = {{AURA}: {AU}dio-d{R}iven streaming {A}vatar},
+  author    = {Cohen, Nathaniel and Dufour, Nicolas and Royer, Am{\'e}lie
+               and Newson, Alasdair and P{\'e}rez, Patrick},
+  booktitle = {British Machine Vision Conference (BMVC)},
+  year      = {2026},
+}</pre>
+          </div>
+        </div>
+      </article>
+
+      <!-- ---------- 2024 ---------- -->
+      <p class="year">2024</p>
+
+      <article class="pub" id="pub-slicedit">
+        <div class="thumb">
+          <span class="ph">static/images/thumbs/slicedit.jpg</span>
+          <img src="static/images/thumbs/slicedit.jpg"
+            alt="Slicedit: a cat in the grass edited into a cheetah" loading="lazy" onerror="this.remove()">
+        </div>
+        <div>
+          <h3>Slicedit: Zero-Shot Video Editing With Text-to-Image Diffusion Models Using Spatio-Temporal Slices</h3>
+          <p class="authors"><b>Nathaniel Cohen</b><sup>*</sup>, <a
+              href="https://www.linkedin.com/in/vladimir-kulikov/">Vladimir Kulikov</a><sup>*</sup>, <a
+              href="https://matankleiner.github.io/">Matan Kleiner</a><sup>*</sup>, <a
+              href="https://inbarhub.github.io/www/">Inbar Huberman-Spiegelglas</a>, <a
+              href="https://tomer.net.technion.ac.il/">Tomer Michaeli</a><br><span class="eq">* equal
+              contribution</span></p>
+          <p class="venue"><span class="badge">ICML 2024</span>
+            <span>Proceedings of the 41st International Conference on Machine Learning</span>
+          </p>
+
+          <div class="plinks">
+            <a href="https://matankleiner.github.io/slicedit/">Website</a>
+            <a href="https://arxiv.org/abs/2405.12211">Paper</a>
+            <a href="https://github.com/fallenshock/Slicedit">Code</a>
+            <button type="button" data-toggle="abs-slicedit" aria-expanded="false">Abstract</button>
+            <button type="button" data-toggle="bib-slicedit" aria-expanded="false">BibTeX</button>
+          </div>
+
+          <div class="panel" id="abs-slicedit" hidden>
+            <p>Text-to-image (T2I) diffusion models achieve state-of-the-art results in image synthesis and editing.
+              However, leveraging such pretrained models for video editing is considered a major challenge. Many
+              existing works attempt to enforce temporal consistency in the edited video through explicit
+              correspondence mechanisms, either in pixel space or between deep features. These methods, however,
+              struggle with strong nonrigid motion. In this paper, we introduce a fundamentally different approach,
+              which is based on the observation that spatiotemporal slices of natural videos exhibit similar
+              characteristics to natural images. Thus, the same T2I diffusion model that is normally used only as a
+              prior on video frames, can also serve as a strong prior for enhancing temporal consistency by applying it
+              on spatiotemporal slices. Based on this observation, we present Slicedit, a method for text-based video
+              editing that utilizes a pretrained T2I diffusion model to process both spatial and spatiotemporal slices.
+              Our method generates videos that retain the structure and motion of the original video while adhering to
+              the target text. Through extensive experiments, we demonstrate Slicedit's ability to edit a wide range of
+              real-world videos, confirming its clear advantages compared to existing competing methods.</p>
+          </div>
+
+          <div class="panel bibbox" id="bib-slicedit" hidden>
+            <button class="copybtn" type="button" data-copy="bibtext-slicedit">Copy</button>
+            <pre id="bibtext-slicedit">@inproceedings{cohen2024slicedit,
+  title     = {Slicedit: Zero-Shot Video Editing With Text-to-Image Diffusion
+               Models Using Spatio-Temporal Slices},
+  author    = {Cohen, Nathaniel and Kulikov, Vladimir and Kleiner, Matan
+               and Huberman-Spiegelglas, Inbar and Michaeli, Tomer},
+  booktitle = {Proceedings of the 41st International Conference on Machine
+               Learning},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {235},
+  pages     = {9109--9137},
+  year      = {2024},
+  month     = {21--27 Jul},
+  publisher = {PMLR},
+  url       = {https://proceedings.mlr.press/v235/cohen24a.html},
+}</pre>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <p>© 2026 Nathaniel Cohen · Last updated September 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    /* ---------- theme: remembered choice, else the OS preference ---------- */
+    (function () {
+      var root = document.documentElement, KEY = 'theme';
+      var stored = null;
+      try { stored = localStorage.getItem(KEY); } catch (e) { }
+      var dark = stored ? stored === 'dark'
+        : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      root.setAttribute('data-theme', dark ? 'dark' : 'light');
+
+      var btn = document.getElementById('themebtn');
+      btn.addEventListener('click', function () {
+        var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem(KEY, next); } catch (e) { }
+      });
+    })();
+
+    /* ---------- nav: hairline on scroll + active section ---------- */
+    (function () {
+      var nav = document.getElementById('nav');
+      var links = Array.prototype.slice.call(document.querySelectorAll('nav ul a'));
+      var sections = links.map(function (a) { return document.querySelector(a.hash); });
+
+      function onScroll() {
+        nav.classList.toggle('scrolled', window.scrollY > 8);
+        var mark = window.scrollY + 120, active = -1;
+        sections.forEach(function (s, i) { if (s && s.offsetTop <= mark) active = i; });
+        links.forEach(function (a, i) {
+          if (i === active) { a.setAttribute('aria-current', 'true'); }
+          else { a.removeAttribute('aria-current'); }
+        });
+      }
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+    })();
+
+    /* ---------- news: show more / show less ---------- */
+    (function () {
+      var VISIBLE = 4;
+      var list = document.getElementById('newslist'), btn = document.getElementById('morebtn');
+      if (!list || !btn) return;
+      var items = Array.prototype.slice.call(list.children);
+      if (items.length <= VISIBLE) { btn.remove(); return; }
+
+      function render(expanded) {
+        items.forEach(function (li, i) { li.hidden = !expanded && i >= VISIBLE; });
+        btn.textContent = expanded ? 'Show less' : 'Show more';
+        btn.setAttribute('aria-expanded', String(expanded));
+      }
+      render(false);
+      btn.addEventListener('click', function () {
+        render(btn.getAttribute('aria-expanded') !== 'true');
+      });
+    })();
+
+    /* ---------- abstract / bibtex toggles ---------- */
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-toggle]');
+      if (!btn) return;
+      var panel = document.getElementById(btn.getAttribute('data-toggle'));
+      if (!panel) return;
+      var open = panel.hidden, pub = btn.closest('.pub');
+      if (pub) {
+        pub.querySelectorAll('.panel').forEach(function (p) { p.hidden = true; });
+        pub.querySelectorAll('[data-toggle]').forEach(function (b) { b.setAttribute('aria-expanded', 'false'); });
+      }
+      panel.hidden = !open;
+      btn.setAttribute('aria-expanded', String(open));
+    });
+
+    /* ---------- bibtex copy ---------- */
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-copy]');
+      if (!btn) return;
+      var pre = document.getElementById(btn.getAttribute('data-copy'));
+      if (!pre) return;
+      var done = function () {
+        btn.textContent = 'Copied';
+        setTimeout(function () { btn.textContent = 'Copy'; }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(pre.textContent).then(done, function () { });
+      } else {
+        var r = document.createRange(); r.selectNodeContents(pre);
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        try { document.execCommand('copy'); done(); } catch (err) { }
+        s.removeAllRanges();
+      }
+    });
+  </script>
+</body>
+
+</html>
