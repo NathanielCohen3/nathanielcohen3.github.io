@@ -857,6 +857,16 @@
           ]
         },
         {
+          "@type": "WebSite",
+          "@id": "https://nathanielcohen3.github.io/#website",
+          "url": "https://nathanielcohen3.github.io/",
+          "name": "Nathaniel Cohen",
+          "inLanguage": "en",
+          "publisher": {
+            "@id": "https://nathanielcohen3.github.io/#person"
+          }
+        },
+        {
           "@type": "ProfilePage",
           "@id": "https://nathanielcohen3.github.io/#webpage",
           "url": "https://nathanielcohen3.github.io/",
@@ -867,6 +877,9 @@
           },
           "about": {
             "@id": "https://nathanielcohen3.github.io/#person"
+          },
+          "isPartOf": {
+            "@id": "https://nathanielcohen3.github.io/#website"
           }
         },
         {
@@ -1382,9 +1395,11 @@
          2. Put that code in the CODE variable below, commit and push.
        Until CODE is filled in, this block does nothing at all.
 
-       To keep your own visits out of your stats, open the site in your browser
-       and run this once in the JS console:
-         localStorage.setItem('skipgc', 't')
+       To keep your own visits out of your stats, visit
+         https://nathanielcohen3.github.io/#toggle-goatcounter
+       once. It flips a localStorage flag and confirms with an alert; visiting it
+       again re-enables counting. Do this only AFTER checking that pageviews show
+       up, otherwise it looks like the setup is broken.
   -->
   <script>
     (function () {
