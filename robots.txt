@@ -1,0 +1,8 @@
+# nathanielcohen3.github.io
+# This file sits at the host root, so it governs every path on the domain,
+# including the project sites published under it (e.g. /aura_website/).
+
+User-agent: *
+Allow: /
+
+Sitemap: https://nathanielcohen3.github.io/sitemap.xml
